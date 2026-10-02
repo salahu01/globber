@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Globber — block the shape of spam</title>
+<meta name="description" content="Globber is a private, on-device Android call blocker that blocks spam by pattern — prefixes, wildcards, regex — before your phone rings.">
+<meta property="og:title" content="Globber — block the shape of spam">
+<meta property="og:description" content="Pattern-matching call blocker for Android. No internet permission. No ads. No tracking.">
+<meta property="og:image" content="https://salahu01.github.io/Globber/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0a0c07">
+<link rel="icon" href="assets/glyph.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;600;800&family=Unbounded:wght@500;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============ LOADER ============ -->
+<div id="loader" aria-hidden="true">
+  <svg class="ld-star" viewBox="-120 -120 240 240"><g fill="#C6FF00"><rect x="-26" y="-104" width="52" height="208" rx="26"/><rect x="-26" y="-104" width="52" height="208" rx="26" transform="rotate(60)"/><rect x="-26" y="-104" width="52" height="208" rx="26" transform="rotate(120)"/></g></svg>
+  <div class="ld-num mono" id="ldNum">+1 800 555 0000</div>
+  <div class="ld-bar"><i id="ldBar"></i></div>
+</div>
+
+<div id="cursor"><span></span></div>
+<div class="grain"></div>
+<canvas id="rain" aria-hidden="true"></canvas>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <a href="#top" class="brand"><img src="assets/glyph.svg" alt=""><b>Globber</b></a>
+  <nav>
+    <a href="#how">How</a><a href="#lab">Lab</a><a href="#rules">Rules</a><a href="#screens">Screens</a><a href="#privacy">Privacy</a><a href="#log">Log</a>
+  </nav>
+  <a class="btn-pill magnet" href="https://github.com/salahu01/globber-app/releases/latest">Get APK<span>↓</span></a>
+</header>
+
+<main id="top">
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="hero-meta mono"><span class="dot"></span> v1.0.5 · Android 10+ · MIT · 0 bytes sent</div>
+  <h1 class="hero-title">
+    <span class="line"><span class="w">Block</span> <span class="w">the</span></span>
+    <span class="line"><span class="w outline">shape</span><span class="w star">✱</span></span>
+    <span class="line"><span class="w">of</span> <span class="w lime">spam.</span></span>
+  </h1>
+  <div class="hero-row">
+    <p class="hero-sub">Spam rotates through numbers. Globber doesn't care. Describe the <em>pattern</em> — <code>+1 800 555*</code>, <code>1900*</code>, <code>*0000</code> — and Android rejects every match <strong>before your phone rings</strong>.</p>
+    <div class="hero-term mono" id="heroTerm">
+      <div class="ht-head"><i></i><i></i><i></i><span>CallScreeningService</span></div>
+      <div class="ht-body" id="htBody"></div>
+    </div>
+  </div>
+  <div class="hero-cta">
+    <a class="btn-big magnet" href="https://github.com/salahu01/globber-app/releases/latest"><span>Download APK</span><svg viewBox="0 0 24 24"><path d="M12 3v13m0 0-5-5m5 5 5-5M4 21h16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    <a class="btn-ghost magnet" href="https://github.com/salahu01/globber-app">View source ↗</a>
+  </div>
+  <div class="scroll-hint mono"><span>scroll</span><i></i></div>
+</section>
+
+<!-- ============ MARQUEE ============ -->
+<div class="marquee" aria-hidden="true">
+  <div class="mq-track mono">
+    <span>+1 800 555 ****</span><b>✱</b><span>1900*</span><b>✱</b><span>*0000</span><b>✱</b><span>^\+44 70\d{8}$</span><b>✱</b><span>+91 140*</span><b>✱</b><span>*9999</span><b>✱</b><span>contains 555</span><b>✱</b>
+    <span>+1 800 555 ****</span><b>✱</b><span>1900*</span><b>✱</b><span>*0000</span><b>✱</b><span>^\+44 70\d{8}$</span><b>✱</b><span>+91 140*</span><b>✱</b><span>*9999</span><b>✱</b><span>contains 555</span><b>✱</b>
+  </div>
+</div>
+
+<!-- ============ PROBLEM ============ -->
+<section class="problem" id="why">
+  <div class="sec-tag mono">01 — the problem</div>
+  <h2 class="big-split">Blocklists want <span class="strike">an exact number.</span><br>Spam <span class="lime">never calls twice</span> from the same one.</h2>
+  <div class="problem-grid">
+    <div class="pg-numbers mono" id="burnList"></div>
+    <div class="pg-copy">
+      <p>Robo-dialers burn through whole ranges — <code>+1 800 555 0101</code>, <code>0102</code>, <code>0103</code>… Every call is a "new" number, so a classic blacklist is always one step behind.</p>
+      <p>Globber flips it: you block the <strong>shape</strong>. One rule, the entire range — gone.</p>
+      <div class="vs">
+        <div><span class="mono">exact list</span><b id="cntExact">0</b><small>rules needed</small></div>
+        <div class="lime-box"><span class="mono">globber</span><b>1</b><small>rule needed</small></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOW ============ -->
+<section class="how" id="how">
+  <div class="sec-tag mono">02 — how it works</div>
+  <h2 class="big-split">Screened in <span class="lime">milliseconds</span>,<br>below the ringtone.</h2>
+  <div class="pipe">
+    <svg class="pipe-svg" viewBox="0 0 1200 220" preserveAspectRatio="none" aria-hidden="true">
+      <path id="pipePath" d="M60 110 C 260 110, 260 110, 400 110 S 640 110, 800 110 S 1040 40, 1140 40 M800 110 S 1040 110, 1140 110 M800 110 S 1040 180, 1140 180" fill="none" stroke="#2a3020" stroke-width="2" stroke-dasharray="6 8"/>
+      <path id="pipeLive" d="M60 110 C 260 110, 260 110, 400 110 S 640 110, 800 110 S 1040 40, 1140 40" fill="none" stroke="#C6FF00" stroke-width="3"/>
+    </svg>
+    <div class="pipe-nodes">
+      <div class="pn"><div class="pn-ico">☎</div><b>Incoming call</b><p>Android hands the caller ID to the system's call-screening role holder — Globber.</p></div>
+      <div class="pn"><div class="pn-ico mono">fn</div><b>Normalize ×2</b><p><code>+91 (988) 123-4567</code> → E.164 <code>+919881234567</code> <em>and</em> national <code>9881234567</code>.</p></div>
+      <div class="pn"><div class="pn-ico">✱</div><b>First enabled match</b><p>Rules are tried in your order. Either form matching wins — so local-style and +CC rules both work.</p></div>
+      <div class="pn pn-out"><div class="pn-ico">⛔</div><b>Respond</b><p><span class="chip">Reject</span> <span class="chip">Silence</span> <span class="chip">Voicemail</span> — then it's written to the block log.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LAB ============ -->
+<section class="lab" id="lab">
+  <div class="sec-tag mono">03 — the lab</div>
+  <h2 class="big-split">Try the <span class="lime">real matcher.</span></h2>
+  <p class="lead">This is a line-for-line JavaScript port of <code>RuleMatcher.kt</code> from the app. Type a rule, throw a caller at it.</p>
+  <div class="lab-box">
+    <div class="lab-l">
+      <label class="mono">rule type</label>
+      <div class="seg" id="labType">
+        <button data-t="EXACT">Exact</button><button data-t="STARTS_WITH" class="on">Starts with</button><button data-t="CONTAINS">Contains</button><button data-t="ENDS_WITH">Ends with</button><button data-t="REGEX">Regex</button>
+      </div>
+      <label class="mono" for="labPat">pattern</label>
+      <input id="labPat" class="mono" value="1900" autocomplete="off" spellcheck="false">
+      <label class="mono" for="labNum">incoming caller ID</label>
+      <input id="labNum" class="mono" value="+91 1900 190 000" autocomplete="off" spellcheck="false">
+      <div class="lab-presets mono">
+        <span>try:</span>
+        <button data-p="STARTS_WITH|+1 800 555|+1 (800) 555-0142">US 555 block</button>
+        <button data-p="ENDS_WITH|0000|+44 7700 900000">robo *0000</button>
+        <button data-p="EXACT|9881234567|+91 98812 34567">national vs +91</button>
+        <button data-p="REGEX|^\+447\d{9}$|+44 7911 123456">UK mobile regex</button>
+        <button data-p="CONTAINS|555|+1 212 867 5309">miss</button>
+      </div>
+    </div>
+    <div class="lab-r">
+      <div class="lab-forms mono">
+        <div><span>E.164 caller</span><b id="fN">—</b></div>
+        <div><span>national caller</span><b id="fNN">—</b></div>
+        <div><span>E.164 pattern</span><b id="fP">—</b></div>
+        <div><span>national pattern</span><b id="fPN">—</b></div>
+      </div>
+      <div class="verdict" id="verdict">
+        <div class="v-ring"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44"/></svg><span id="vIco">✱</span></div>
+        <div><b id="vTxt">BLOCKED</b><small class="mono" id="vWhy"></small></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RULES (horizontal) ============ -->
+<section class="rules" id="rules">
+  <div class="rules-pin">
+    <div class="rules-head">
+      <div class="sec-tag mono">04 — five match types</div>
+      <h2>Five ways to<br>describe a <span class="lime">nuisance.</span></h2>
+    </div>
+    <div class="rules-track">
+      <article class="rc"><span class="rc-n mono">01</span><h3>Exact</h3><code>9881234567</code><p>One number, either written locally or with country code — both forms are checked.</p><div class="rc-demo mono"><i class="hit">+91 98812 34567</i><i>+91 98812 34568</i></div></article>
+      <article class="rc"><span class="rc-n mono">02</span><h3>Starts&nbsp;with</h3><code>1900</code><p>The default. Kill premium-rate or telemarketing prefixes in one line.</p><div class="rc-demo mono"><i class="hit">1900 190 000</i><i class="hit">1900 555 123</i><i>1800 190 000</i></div></article>
+      <article class="rc"><span class="rc-n mono">03</span><h3>Contains</h3><code>555</code><p>Any caller ID with this run of digits anywhere inside.</p><div class="rc-demo mono"><i class="hit">+1 800 555 0101</i><i>+1 212 867 5309</i></div></article>
+      <article class="rc"><span class="rc-n mono">04</span><h3>Ends&nbsp;with</h3><code>0000</code><p>Sequential robo-dialers love round tails. They stop here.</p><div class="rc-demo mono"><i class="hit">+44 7700 900000</i><i>+44 7700 900001</i></div></article>
+      <article class="rc rc-regex"><span class="rc-n mono">05</span><h3>Regex</h3><code>^\+447\d{9}$</code><p>Full regular expressions on the normalized E.164 number, for when you need surgery.</p><div class="rc-demo mono"><i class="hit">+44 7911 123456</i><i>+44 20 7946 0958</i></div></article>
+      <article class="rc rc-act"><span class="rc-n mono">+</span><h3>Then pick an action</h3><ul><li><b>Reject</b> hang up instantly</li><li><b>Silence</b> let it ring, mutely</li><li><b>Voicemail</b> send it straight there</li></ul><p class="mono small">+ optional: block withheld / private numbers</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SCREENS ============ -->
+<section class="screens" id="screens">
+  <div class="sec-tag mono">05 — the app</div>
+  <h2 class="big-split">Neon-lime <span class="lime">bento.</span> Built in Compose.</h2>
+  <div class="phones">
+    <figure class="phone" data-depth="0.5"><img src="assets/01-dashboard.webp" alt="Dashboard screen" loading="lazy"><figcaption class="mono">Dashboard — status, counts, today</figcaption></figure>
+    <figure class="phone" data-depth="1"><img src="assets/02-rules.webp" alt="Rules screen" loading="lazy"><figcaption class="mono">Rules — reorder, toggle, filter</figcaption></figure>
+    <figure class="phone" data-depth="0.7"><img src="assets/03-blocked-calls.webp" alt="Blocked calls log" loading="lazy"><figcaption class="mono">Log — grouped by day, searchable</figcaption></figure>
+    <figure class="phone" data-depth="1.2"><img src="assets/04-settings.webp" alt="Settings screen" loading="lazy"><figcaption class="mono">Settings — theme, unknowns, backup</figcaption></figure>
+  </div>
+  <div class="feat-grid">
+    <div class="fg"><b>Block log</b><p>Every screened call, grouped by day, with action filters and search.</p></div>
+    <div class="fg"><b>Backup</b><p>Export &amp; import your rules as a JSON file. Yours, portable.</p></div>
+    <div class="fg"><b>Theming</b><p>System, light or dark — with a custom icon set throughout.</p></div>
+    <div class="fg"><b>Notifications</b><p>Optional heads-up whenever something gets blocked.</p></div>
+  </div>
+</section>
+
+<!-- ============ REEL ============ -->
+<section class="reel">
+  <div class="reel-wrap">
+    <video id="reel" src="assets/reel.mp4" poster="assets/reel.jpg" muted loop playsinline preload="none"></video>
+    <div class="reel-label mono">▶ promo reel · 40s</div>
+  </div>
+</section>
+
+<!-- ============ PRIVACY ============ -->
+<section class="privacy" id="privacy">
+  <div class="sec-tag mono">06 — privacy</div>
+  <div class="zero"><span id="zeroNum">100</span></div>
+  <h2 class="priv-h">network permissions.<br><span class="lime">Globber literally can't phone home.</span></h2>
+  <div class="priv-grid mono">
+    <div><s>android.permission.INTERNET</s><span class="no">not requested</span></div>
+    <div><s>analytics SDK</s><span class="no">none</span></div>
+    <div><s>ads</s><span class="no">none</span></div>
+    <div><s>account / sign-in</s><span class="no">none</span></div>
+    <div><b>POST_NOTIFICATIONS</b><span class="yes">optional · block alerts</span></div>
+    <div><b>Call-screening role</b><span class="yes">required · the whole point</span></div>
+  </div>
+  <p class="lead">Rules and the block log live in a local Room database on your phone. Nothing else. Read the <a href="https://github.com/salahu01/globber-app/blob/master/PRIVACY.md">privacy policy</a>.</p>
+</section>
+
+<!-- ============ SETUP ============ -->
+<section class="setup" id="setup">
+  <div class="sec-tag mono">07 — get running</div>
+  <h2 class="big-split">Three steps. <span class="lime">Then silence.</span></h2>
+  <ol class="steps">
+    <li><span class="mono">01</span><b>Download the APK</b><p>Grab the signed build from GitHub Releases. Needs Android 10 (API 29) or newer.</p></li>
+    <li><span class="mono">02</span><b>Set as call-screening app</b><p>Globber asks Android for the call-screening role on first launch. Accept it — that's what lets it reject calls.</p></li>
+    <li><span class="mono">03</span><b>Write your first rule</b><p>Tap +, type a prefix like <code>1900</code>. "Starts with" is preselected. Done.</p></li>
+  </ol>
+</section>
+
+<!-- ============ CHANGELOG ============ -->
+<section class="log" id="log">
+  <div class="sec-tag mono">08 — changelog</div>
+  <h2 class="big-split">Shipped, <span class="lime">in public.</span></h2>
+  <div class="tl">
+    <div class="tl-line"><i id="tlFill"></i></div>
+    <div class="tl-item"><time class="mono">2026-07-24</time><b>v1.0.5</b><p>National numbers like <code>9605…</code> now match <code>+91…</code> caller IDs — the matcher compares both E.164 and national forms. Add-rule dialog button fixed. Misleading contacts toggle removed, along with <code>READ_CONTACTS</code>.</p></div>
+    <div class="tl-item"><time class="mono">2026-06-29</time><b>v1.0.4</b><p>New rules default to <strong>Starts with</strong> — typing <code>1900</code> now blocks the whole prefix out of the box.</p></div>
+    <div class="tl-item"><time class="mono">2026-06-29</time><b>v1.0.3</b><p>Settings screen: theme switcher, block-unknown-numbers toggle, portrait lock.</p></div>
+    <div class="tl-item"><time class="mono">earlier</time><b>v1.0.0 – 1.0.2</b><p>Pattern rules, call screening, block log, backup, splash screen and the bento UI.</p></div>
+  </div>
+  <a class="link-arrow mono" href="https://github.com/salahu01/globber-app/blob/master/CHANGELOG.md">full changelog →</a>
+</section>
+
+<!-- ============ STACK ============ -->
+<section class="stack">
+  <div class="stack-row mono">
+    <span>Kotlin</span><span>Jetpack Compose</span><span>Room</span><span>CallScreeningService</span><span>minSdk 29</span><span>targetSdk 35</span><span>MIT</span>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="cta">
+  <img class="cta-glyph" src="assets/glyph.svg" alt="">
+  <h2>Let the shape<br><span class="lime">ring out.</span></h2>
+  <a class="btn-big magnet" href="https://github.com/salahu01/globber-app/releases/latest"><span>Download Globber v1.0.5</span><svg viewBox="0 0 24 24"><path d="M12 3v13m0 0-5-5m5 5 5-5M4 21h16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  <div class="cta-links mono">
+    <a href="https://github.com/salahu01/globber-app">Source</a><a href="https://github.com/salahu01/globber-app/issues">Issues</a><a href="https://github.com/salahu01/globber-app/blob/master/CONTRIBUTING.md">Contributing</a><a href="https://github.com/salahu01/globber-app/blob/master/SECURITY.md">Security</a><a href="https://github.com/salahu01/globber-app/blob/master/PRIVACY.md">Privacy</a>
+  </div>
+</section>
+</main>
+
+<footer class="foot mono">
+  <span>© 2026 <a href="https://github.com/salahu01">salahu01</a> · MIT</span>
+  <span>made with ✱ and zero network calls</span>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
