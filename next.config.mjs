@@ -1,5 +1,5 @@
-// Static export for GitHub Pages, served under /Globber.
-const basePath = process.env.NODE_ENV === 'production' ? '/Globber' : '';
+// Static export for GitHub Pages, served under /globber.
+const basePath = process.env.NODE_ENV === 'production' ? '/globber' : '';
 
 /** @type {import('next').NextConfig} */
 export default {
