@@ -1,7 +1,7 @@
 :root{
   --bg:#0a0c07;--bg2:#11140c;--line:#232a18;--fg:#eef3e0;--dim:#8a937a;
   --lime:#C6FF00;--lime2:#9BE000;--red:#ff4d3d;
-  --f:'Space Grotesk',system-ui,sans-serif;--d:'Unbounded',var(--f);--m:'JetBrains Mono',ui-monospace,monospace;
+  --f:var(--font-grotesk),system-ui,sans-serif;--d:var(--font-unbounded),var(--f);--m:var(--font-mono),ui-monospace,monospace;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{background:var(--bg);color-scheme:dark;overflow-x:clip}
