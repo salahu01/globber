@@ -2,4 +2,17 @@
 
 Source for **https://salahu01.github.io/Globber/**, the landing page for [Globber](https://github.com/salahu01/globber-app), a pattern-matching call blocker for Android.
 
-Static HTML/CSS/JS with GSAP + ScrollTrigger + Lenis from CDN. The "Lab" section is a JavaScript port of the app's `RuleMatcher.kt`. Served by GitHub Pages from `main`.
+Next.js (App Router) exported as a static site, with GSAP + ScrollTrigger + Lenis for motion. The "Lab" section is a TypeScript port of the app's `RuleMatcher.kt` (`lib/matcher.ts`).
+
+```bash
+npm install
+npm run dev     # http://localhost:3000
+npm run build   # static export to out/ (basePath /Globber)
+```
+
+Deployed to GitHub Pages by `.github/workflows/deploy.yml` on every push to `main`.
+
+- `app/page.tsx` — page markup
+- `components/Lab.tsx` — interactive matcher
+- `components/Effects.tsx` — loader, number rain, cursor and scroll animations
+- `public/assets/` — images, icon, promo reel
