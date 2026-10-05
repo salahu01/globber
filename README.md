@@ -8,9 +8,10 @@ Next.js (App Router) exported as a static site, with GSAP + ScrollTrigger + Leni
 npm install
 npm run dev     # http://localhost:3000
 npm run build   # static export to out/ (basePath /globber)
+npm run deploy  # build and force-push out/ to the gh-pages branch
 ```
 
-Deployed to GitHub Pages by `.github/workflows/deploy.yml` on every push to `main`.
+GitHub Pages serves the `gh-pages` branch. Run `npm run deploy` from `main` to publish.
 
 - `app/page.tsx` — page markup
 - `components/Lab.tsx` — interactive matcher
