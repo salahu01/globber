@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Globber — block the shape of spam',
     description: 'Pattern-matching call blocker for Android. No internet permission. No ads. No tracking.',
-    images: ['/Globber/assets/og.png'],
+    images: ['/globber/assets/og.png'],
   },
   twitter: { card: 'summary_large_image' },
 };
