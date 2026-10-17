@@ -93,8 +93,8 @@ section{position:relative;padding:clamp(96px,14vh,160px) clamp(20px,6vw,96px);z-
 @keyframes tick{to{transform:translateX(-50%)}}
 
 /* phones */
-.phone{position:relative;aspect-ratio:1080/2400;border-radius:12%/5.4%;padding:3.2%;background:linear-gradient(160deg,#3B3A35,#121210 40%,#060605);box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.12),inset 0 1.5px 0 rgba(255,255,255,.2),var(--shadow-lg)}
-.phone img{width:100%;height:100%;object-fit:cover;border-radius:10%/4.6%}
+.phone{position:relative;aspect-ratio:1080/2400;border-radius:12%/5.4%;background:linear-gradient(160deg,#3B3A35,#121210 40%,#060605);box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.12),inset 0 1.5px 0 rgba(255,255,255,.2),var(--shadow-lg)}
+.phone img{position:absolute;left:3.2%;top:1.45%;width:93.6%;height:97.1%;object-fit:cover;border-radius:10%/4.6%}
 .phone::after{content:"";position:absolute;top:3.6%;left:50%;width:3.6%;aspect-ratio:1;transform:translateX(-50%);border-radius:50%;background:#050505;box-shadow:inset 0 0 0 2px #1d1c1a}
 
 /* how it works */
@@ -109,7 +109,7 @@ section{position:relative;padding:clamp(96px,14vh,160px) clamp(20px,6vw,96px);z-
 .how-sticky{position:relative}
 .how-device{position:sticky;top:12vh;height:76vh;display:grid;place-items:center}
 .phone-lg{height:100%;max-height:760px}
-.phone-lg img{position:absolute;inset:3.2%;width:93.6%;height:93.6%;opacity:0;transform:scale(1.03);transition:opacity .6s var(--ease),transform .8s var(--ease)}
+.phone-lg img{opacity:0;transform:scale(1.03);transition:opacity .6s var(--ease),transform .8s var(--ease)}
 .phone-lg img.on{opacity:1;transform:none}
 .float{position:absolute;z-index:3;display:flex;align-items:center;gap:12px;padding:14px 18px;border-radius:20px;background:rgba(255,255,255,.84);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:inset 0 0 0 1px #fff,var(--shadow-lg);font-size:15px;line-height:1.25}
 .float b{display:block;font-weight:800;font-feature-settings:"tnum"}
@@ -171,8 +171,8 @@ section{position:relative;padding:clamp(96px,14vh,160px) clamp(20px,6vw,96px);z-
 .type-demo .miss i{background:#E3F4EA;color:#127143}
 
 /* design: compare slider + gallery */
-.compare{position:relative;margin:72px auto 0;height:min(800px,84vh);width:auto;max-width:82vw;aspect-ratio:1080/2400;border-radius:12%/5.4%;padding:3.2%;background:linear-gradient(160deg,#3B3A35,#121210 40%,#060605);box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.12),0 60px 120px -40px rgba(21,20,15,.55),0 0 0 1px rgba(21,20,15,.04);touch-action:pan-y;user-select:none;cursor:ew-resize}
-.cmp-in{position:relative;width:100%;height:100%;border-radius:10%/4.6%;overflow:hidden}
+.compare{position:relative;margin:72px auto 0;width:min(380px,82vw,calc(84vh * 1080 / 2400));aspect-ratio:1080/2400;border-radius:12%/5.4%;background:linear-gradient(160deg,#3B3A35,#121210 40%,#060605);box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.12),0 60px 120px -40px rgba(21,20,15,.55),0 0 0 1px rgba(21,20,15,.04);touch-action:pan-y;user-select:none;cursor:ew-resize}
+.cmp-in{position:absolute;inset:1.45% 3.2%;border-radius:10%/4.6%;overflow:hidden}
 .cmp-in img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
 .cmp-dark{clip-path:inset(0 0 0 var(--x,50%))}
 .cmp-line{position:absolute;top:0;bottom:0;left:var(--x,50%);width:2px;margin-left:-1px;background:#fff;box-shadow:0 0 18px rgba(0,0,0,.4)}
