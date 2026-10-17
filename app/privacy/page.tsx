@@ -16,7 +16,7 @@ export default function Privacy() {
     <main className="pp">
       <header className="pp-head">
         <a className="pp-brand" href={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/`}>
-          <img src={asset('glyph.svg')} alt="" width={30} height={30} />
+          <img src={asset('app/mark.svg')} alt="" width={30} height={30} />
           Globber
         </a>
         <span className="pp-meta mono">Last updated · {UPDATED}</span>

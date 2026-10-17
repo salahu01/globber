@@ -1,23 +1,22 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import gsap from 'gsap';
 import { matches, national, normalize, type RuleType } from '@/lib/matcher';
 
 const TYPES: [RuleType, string][] = [
-  ['EXACT', 'Exact'],
   ['STARTS_WITH', 'Starts with'],
-  ['CONTAINS', 'Contains'],
   ['ENDS_WITH', 'Ends with'],
+  ['CONTAINS', 'Contains'],
+  ['EXACT', 'Exact'],
   ['REGEX', 'Regex'],
 ];
 
 const PRESETS: { label: string; type: RuleType; pattern: string; num: string }[] = [
-  { label: 'US 555 block', type: 'STARTS_WITH', pattern: '+1 800 555', num: '+1 (800) 555-0142' },
-  { label: 'robo *0000', type: 'ENDS_WITH', pattern: '0000', num: '+44 7700 900000' },
-  { label: 'national vs +91', type: 'EXACT', pattern: '9881234567', num: '+91 98812 34567' },
+  { label: 'Telemarketing series', type: 'STARTS_WITH', pattern: '+91 140', num: '+91 140 223 3445' },
+  { label: 'Robo tail', type: 'ENDS_WITH', pattern: '0000', num: '+44 7700 900000' },
+  { label: 'Local vs +91', type: 'EXACT', pattern: '9881234567', num: '+91 98812 34567' },
   { label: 'UK mobile regex', type: 'REGEX', pattern: '^\\+447\\d{9}$', num: '+44 7911 123456' },
-  { label: 'miss', type: 'CONTAINS', pattern: '555', num: '+1 212 867 5309' },
+  { label: 'A real friend', type: 'STARTS_WITH', pattern: '+91 140', num: '+91 98470 12345' },
 ];
 
 function Form({ label, value, hit }: { label: string; value: string; hit: boolean }) {
@@ -29,10 +28,18 @@ function Form({ label, value, hit }: { label: string; value: string; hit: boolea
   );
 }
 
+const Block = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round"><circle cx="12" cy="12" r="8.5" /><path d="M6 18 18 6" /></svg>
+);
+const Ring = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
+);
+
+/** Live port of the app's RuleMatcher: same normalisation, same verdicts. */
 export default function Lab() {
   const [type, setType] = useState<RuleType>('STARTS_WITH');
-  const [pattern, setPattern] = useState('1900');
-  const [num, setNum] = useState('+91 1900 190 000');
+  const [pattern, setPattern] = useState('+91 140');
+  const [num, setNum] = useState('+91 140 223 3445');
   const verdictRef = useRef<HTMLDivElement>(null);
 
   const r = matches(num, type, pattern);
@@ -40,34 +47,38 @@ export default function Lab() {
   const viaE164 = r.hit && (isReg || r.via.startsWith('E'));
   const viaNational = r.hit && r.via.startsWith('n');
 
-  // Replay the verdict animation on every change.
+  // Replay the verdict pop on every change.
   useEffect(() => {
     const v = verdictRef.current;
     if (!v) return;
     v.classList.remove('anim');
     void v.offsetWidth;
     v.classList.add('anim');
-    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!reduced && r.hit) gsap.fromTo(v, { x: -6 }, { x: 0, duration: 0.4, ease: 'elastic.out(1,.3)' });
-  }, [type, pattern, num, r.hit]);
+  }, [type, pattern, num]);
 
   return (
-    <div className="lab-box">
+    <div className="lab-box reveal">
       <div className="lab-l">
-        <label className="mono">rule type</label>
-        <div className="seg">
+        <label>Match type</label>
+        <div className="seg" role="radiogroup" aria-label="Match type">
           {TYPES.map(([t, label]) => (
-            <button key={t} className={t === type ? 'on' : undefined} onClick={() => setType(t)}>
+            <button key={t} role="radio" aria-checked={t === type} className={t === type ? 'on' : undefined} onClick={() => setType(t)}>
               {label}
             </button>
           ))}
         </div>
-        <label className="mono" htmlFor="labPat">pattern</label>
-        <input id="labPat" className="mono" value={pattern} onChange={e => setPattern(e.target.value)} autoComplete="off" spellCheck={false} />
-        <label className="mono" htmlFor="labNum">incoming caller ID</label>
-        <input id="labNum" className="mono" value={num} onChange={e => setNum(e.target.value)} autoComplete="off" spellCheck={false} />
-        <div className="lab-presets mono">
-          <span>try:</span>
+        <label htmlFor="labPat">Pattern</label>
+        <div className="field">
+          <i aria-hidden="true">✱</i>
+          <input id="labPat" value={pattern} onChange={e => setPattern(e.target.value)} autoComplete="off" spellCheck={false} />
+        </div>
+        <label htmlFor="labNum">Incoming caller ID</label>
+        <div className="field">
+          <i aria-hidden="true">☏</i>
+          <input id="labNum" value={num} onChange={e => setNum(e.target.value)} inputMode="tel" autoComplete="off" spellCheck={false} />
+        </div>
+        <div className="lab-presets">
+          <span>Try</span>
           {PRESETS.map(p => (
             <button key={p.label} onClick={() => { setType(p.type); setPattern(p.pattern); setNum(p.num); }}>
               {p.label}
@@ -75,21 +86,18 @@ export default function Lab() {
           ))}
         </div>
       </div>
-      <div className="lab-r">
-        <div className="lab-forms mono">
-          <Form label="E.164 caller" value={normalize(num)} hit={viaE164} />
-          <Form label="national caller" value={isReg ? '(unused)' : national(num)} hit={viaNational} />
-          <Form label="E.164 pattern" value={isReg ? pattern : normalize(pattern)} hit={viaE164} />
-          <Form label="national pattern" value={isReg ? '(unused)' : national(pattern)} hit={viaNational} />
+      <div className={`lab-r${r.hit ? '' : ' pass'}`}>
+        <div className="lab-forms">
+          <Form label="Caller · E.164" value={normalize(num)} hit={viaE164} />
+          <Form label="Caller · national" value={isReg ? 'unused' : national(num)} hit={viaNational} />
+          <Form label="Pattern · E.164" value={isReg ? pattern : normalize(pattern)} hit={viaE164} />
+          <Form label="Pattern · national" value={isReg ? 'unused' : national(pattern)} hit={viaNational} />
         </div>
-        <div ref={verdictRef} className={`verdict${r.hit ? '' : ' pass'}`}>
-          <div className="v-ring">
-            <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" /></svg>
-            <span>{r.hit ? '✱' : '☎'}</span>
-          </div>
+        <div ref={verdictRef} className={`verdict${r.hit ? '' : ' pass'}`} aria-live="polite">
+          <div className="v-badge">{r.hit ? <Block /> : <Ring />}</div>
           <div>
-            <b>{r.hit ? 'BLOCKED' : 'RINGS THROUGH'}</b>
-            <small className="mono">{r.via}</small>
+            <b>{r.hit ? 'Blocked' : 'Rings through'}</b>
+            <small>{r.via}</small>
           </div>
         </div>
       </div>

@@ -1,31 +1,34 @@
 import type { Metadata, Viewport } from 'next';
-import { JetBrains_Mono, Space_Grotesk, Unbounded } from 'next/font/google';
+import { Plus_Jakarta_Sans } from 'next/font/google';
 import { asset } from '@/lib/site';
 import './globals.css';
 
-const grotesk = Space_Grotesk({ subsets: ['latin'], weight: ['400', '500', '700'], variable: '--font-grotesk' });
-const mono = JetBrains_Mono({ subsets: ['latin'], weight: ['400', '600', '800'], variable: '--font-mono' });
-const unbounded = Unbounded({ subsets: ['latin'], weight: ['500', '800', '900'], variable: '--font-unbounded' });
+const jakarta = Plus_Jakarta_Sans({ subsets: ['latin'], weight: ['400', '500', '600', '700', '800'], variable: '--font-jakarta' });
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://salahu01.github.io'),
-  title: 'Globber — block the shape of spam',
+  title: 'Globber: block spam by its pattern',
   description:
-    'Globber is a private, on-device Android call blocker that blocks spam by pattern — prefixes, wildcards, regex — before your phone rings.',
-  icons: { icon: { url: asset('glyph.svg'), type: 'image/svg+xml' } },
+    'Globber is a private, on-device Android call blocker. One pattern like +91 140* silences a whole series of spam numbers before your phone rings. No internet permission, no ads, no tracking.',
+  icons: { icon: { url: asset('app/mark.svg'), type: 'image/svg+xml' } },
   openGraph: {
-    title: 'Globber — block the shape of spam',
-    description: 'Pattern-matching call blocker for Android. No internet permission. No ads. No tracking.',
+    title: 'Globber: block spam by its pattern',
+    description: 'One rule silences an entire series of spam numbers. On-device, no internet, no ads.',
     images: ['/globber/assets/og.png'],
   },
   twitter: { card: 'summary_large_image' },
 };
 
-export const viewport: Viewport = { themeColor: '#0a0c07' };
+export const viewport: Viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#F8F7F4' },
+    { media: '(prefers-color-scheme: dark)', color: '#0B0B0A' },
+  ],
+};
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${grotesk.variable} ${mono.variable} ${unbounded.variable}`}>
+    <html lang="en" className={jakarta.variable}>
       <body>{children}</body>
     </html>
   );
