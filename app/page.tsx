@@ -89,19 +89,19 @@ export default function Home() {
         {/* ============ HERO ============ */}
         <section className="hero">
           <div className="hero-copy">
-            <p className="eyebrow reveal"><span className="pulse" /> On-device call screening for Android</p>
+            <p className="eyebrow hero-in"><span className="pulse" /> On-device call screening for Android</p>
             <h1 className="hero-title">
               <span className="ln"><span className="w">Block spam</span></span>
               <span className="ln"><span className="w">by its <em>pattern.</em></span></span>
             </h1>
-            <p className="hero-sub reveal">
+            <p className="hero-sub hero-in">
               Telemarketers rotate through hundreds of numbers. Globber blocks the shape they share, so one rule like <code>+91 140*</code> silences the entire series before your phone rings.
             </p>
-            <div className="hero-cta reveal">
+            <div className="hero-cta hero-in">
               <a className="btn btn-ink magnet" href={RELEASES}><Down /> Download for Android</a>
               <a className="btn btn-ghost" href="#lab">Try a pattern <Arrow /></a>
             </div>
-            <ul className="hero-proof reveal" aria-label="Highlights">
+            <ul className="hero-proof hero-in" aria-label="Highlights">
               <li><b>0</b> bytes sent off your phone</li>
               <li><b>5</b> ways to match a number</li>
               <li><b>1</b> permission, optional</li>

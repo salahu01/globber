@@ -53,10 +53,19 @@ export default function Effects() {
       io.observe(el);
     });
     cleanups.push(() => io.disconnect());
+    // Never leave content hidden if the observer doesn't fire (background tabs, odd embeds).
+    const failSafe = setTimeout(() => document.querySelectorAll('.reveal:not(.in)').forEach(el => {
+      const b = el.getBoundingClientRect();
+      if (b.top < innerHeight) el.classList.add('in');
+    }), 1800);
+    cleanups.push(() => clearTimeout(failSafe));
 
     ctx.add(() => {
       /* ---------- hero title ---------- */
-      if (!RM) gsap.from('.hero-title .w', { yPercent: 110, duration: 1.2, ease: 'expo.out', stagger: 0.12, delay: 0.15 });
+      if (!RM) {
+        gsap.from('.hero-title .w', { yPercent: 110, duration: 1.2, ease: 'expo.out', stagger: 0.12, delay: 0.15 });
+        gsap.from('.hero-in', { y: 24, opacity: 0, duration: 1, ease: 'expo.out', stagger: 0.09, delay: 0.45 });
+      }
 
       /* ---------- tile parallax tilt ---------- */
       const tile = document.getElementById('tile');
